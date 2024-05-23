@@ -3,18 +3,21 @@ import { AuthService } from "./auth.service";
 import { UsuarioModule } from "../usuario/usuario.module";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
-import { jwtConstants } from "./auth.constants";
+import * as dotenv from "dotenv";
+
+dotenv.config();
+
 @Module({
   imports: [
     forwardRef(() => UsuarioModule),
     JwtModule.register({
       global: true,
-      secret: jwtConstants.secret,
-      signOptions: { expiresIn: jwtConstants.expiresIn },
+      secret: process.env.TOKEN_SECRET_KEY,
+      signOptions: { expiresIn: process.env.TOKEN_EXPIRATION },
     }),
   ],
-  providers: [AuthService],
   controllers: [AuthController],
+  providers: [AuthService],
   exports: [AuthService],
 })
 export class AuthModule {}

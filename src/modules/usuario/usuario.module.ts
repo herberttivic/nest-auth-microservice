@@ -8,6 +8,6 @@ import { Module, forwardRef } from "@nestjs/common";
   imports: [forwardRef(() => AuthModule)],
   controllers: [UsuarioController],
   providers: [UsuarioService, UsuarioRepositoryService],
-  exports: [UsuarioRepositoryService, UsuarioService],
+  exports: [UsuarioService],
 })
 export class UsuarioModule {}

@@ -16,14 +16,14 @@ export class AuthService {
   ) {}
 
   async signIn(
-    username: string,
-    password: string,
+    email: string,
+    senha: string,
   ): Promise<{ access_token: string }> {
-    if (username == "" || password == "") {
+    if (email == "" || senha == "") {
       throw new NotFoundException("Insira o email e a senha!");
     }
 
-    const usuario = await this.validateByEmailPassword(username, password);
+    const usuario = await this.validateByEmailPassword(email, senha);
     const payload = this.createPayload(usuario);
 
     return {
