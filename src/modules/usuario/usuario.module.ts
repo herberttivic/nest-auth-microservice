@@ -1,10 +1,11 @@
-import { UsuarioRepositoryService } from "src/modules/usuario/repositories/usuario-repository/usuario-repository.service";
+import { AuthModule } from "../auth/auth.module";
+import { UsuarioRepositoryService } from "./repository/usuario-repository.service";
 import { UsuarioController } from "./usuario.controller";
 import { UsuarioService } from "./usuario.service";
-import { Module } from "@nestjs/common";
+import { Module, forwardRef } from "@nestjs/common";
 
 @Module({
-  imports: [],
+  imports: [forwardRef(() => AuthModule)],
   controllers: [UsuarioController],
   providers: [UsuarioService, UsuarioRepositoryService],
   exports: [UsuarioRepositoryService, UsuarioService],
