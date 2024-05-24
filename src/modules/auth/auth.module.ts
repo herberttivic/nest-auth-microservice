@@ -4,11 +4,14 @@ import { UsuarioModule } from "../usuario/usuario.module";
 import { JwtModule } from "@nestjs/jwt";
 import { AuthController } from "./auth.controller";
 import * as dotenv from "dotenv";
+import { LocalStrategy } from "./strategies/local.stragegy";
+import { PassportModule } from "@nestjs/passport";
 
 dotenv.config();
 
 @Module({
   imports: [
+    PassportModule,
     forwardRef(() => UsuarioModule),
     JwtModule.register({
       global: true,
@@ -17,7 +20,6 @@ dotenv.config();
     }),
   ],
   controllers: [AuthController],
-  providers: [AuthService],
-  exports: [AuthService],
+  providers: [AuthService, LocalStrategy],
 })
 export class AuthModule {}

@@ -1,12 +1,10 @@
-import {
-  Injectable,
-  NotFoundException,
-  UnauthorizedException,
-} from "@nestjs/common";
+import { Injectable, UnauthorizedException } from "@nestjs/common";
 import { UsuarioService } from "../usuario/usuario.service";
 import { JwtService } from "@nestjs/jwt";
 import { AuthPayloadDto } from "./dtos/auth.payload.dto";
 import { UsuarioEntity } from "../usuario/usuario.entity";
+import { AuthLoginDto } from "./dtos/auth.login.dto";
+// import { AuthRequest } from "./dtos/auth.request.dto";
 
 @Injectable()
 export class AuthService {
@@ -15,24 +13,11 @@ export class AuthService {
     private jwtService: JwtService,
   ) {}
 
-  async signIn(
-    email: string,
-    senha: string,
-  ): Promise<{ access_token: string }> {
-    if (email == "" || senha == "") {
-      throw new NotFoundException("Insira o email e a senha!");
-    }
-
-    const usuario = await this.validateByEmailPassword(email, senha);
-    const payload = this.createPayload(usuario);
-
-    return {
-      access_token: await this.jwtService.signAsync(payload),
-    };
-  }
-
-  async isValidPayload(payload: AuthPayloadDto) {
-    return await this.validateByEmailPassword(payload.email, payload.senha);
+  async login(request): Promise<any> {
+    // const payload = this.createPayload(usuario);
+    // return {
+    //   access_token: await this.jwtService.signAsync(payload),
+    // };
   }
 
   private createPayload(usuario: UsuarioEntity): AuthPayloadDto {
@@ -45,16 +30,15 @@ export class AuthService {
     return { ...rawPayload };
   }
 
-  private async validateByEmailPassword(
+  async validateByEmailPassword(
     email: string,
-    password: string,
+    senha: string,
   ): Promise<UsuarioEntity> {
     const usuario = await this.usuarioService.findByEmail(email);
-    if (!usuario) {
-      throw new UnauthorizedException("Usuário não encontrado!");
-    }
-    if (usuario.senha !== password) {
-      throw new UnauthorizedException("Senha incorreta.");
+
+    // IMPLEMENTAR LÓGICA DE ENCRIPTOGRAFIA
+    if (!usuario || usuario.senha !== senha) {
+      return null;
     }
 
     return usuario;

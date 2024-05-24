@@ -6,10 +6,10 @@ import { data } from "./fake-db";
 @Injectable()
 export class UsuarioRepositoryService implements IUsuarioRepository {
   public async findByEmail(email: string) {
-    const usuarioEncontrado = data.find((usuario) => (usuario.email = email));
+    const usuarioEncontrado = data.find((usuario) => usuario.email === email);
 
     if (!usuarioEncontrado) {
-      throw new NotFoundException("Usuário não encontrado!");
+      return null;
     }
     return usuarioEncontrado;
   }

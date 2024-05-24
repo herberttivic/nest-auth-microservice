@@ -1,5 +1,4 @@
 import {
-  Body,
   Controller,
   Get,
   HttpCode,
@@ -8,20 +7,22 @@ import {
   Request,
   UseGuards,
 } from "@nestjs/common";
-import { AuthGuard } from "./auth.guard";
+
 import { AuthService } from "./auth.service";
+import { LocalAuthGuard } from "./guards/local-auth.guard";
+import { AuthRequest } from "./dtos/auth.request.dto";
 
 @Controller("auth")
 export class AuthController {
   constructor(private authService: AuthService) {}
 
-  @HttpCode(HttpStatus.OK)
   @Post("login")
-  signIn(@Body() signInDto: Record<string, any>) {
-    return this.authService.signIn(signInDto.email, signInDto.senha);
+  @HttpCode(HttpStatus.OK)
+  @UseGuards(LocalAuthGuard)
+  async signIn(@Request() request: AuthRequest) {
+    return await this.authService.login(request);
   }
 
-  @UseGuards(AuthGuard)
   @Get("profile")
   getProfile(@Request() req) {
     return req.user;

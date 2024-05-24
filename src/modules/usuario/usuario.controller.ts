@@ -1,10 +1,8 @@
-import { Controller, Get, UseGuards } from "@nestjs/common";
-import { AuthGuard } from "../auth/auth.guard";
+import { Controller, Get } from "@nestjs/common";
 
 @Controller("usuario")
 export class UsuarioController {
   @Get("/hello")
-  @UseGuards(AuthGuard)
   sayHello() {
     return {
       message: "Hello authenticated!",
