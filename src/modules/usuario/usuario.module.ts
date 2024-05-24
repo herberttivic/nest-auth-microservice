@@ -1,13 +1,15 @@
-import { AuthModule } from "../auth/auth.module";
-import { UsuarioRepositoryService } from "./repository/usuario-repository.service";
+import { TypeOrmModule } from "@nestjs/typeorm";
+import { UsuarioRepository } from "./repository/usuario-typeorm-repository";
 import { UsuarioController } from "./usuario.controller";
 import { UsuarioService } from "./usuario.service";
-import { Module, forwardRef } from "@nestjs/common";
+import { Module } from "@nestjs/common";
+import { UsuarioEntity } from "./usuario.entity";
+import { JwtService } from "@nestjs/jwt";
 
 @Module({
-  imports: [forwardRef(() => AuthModule)],
+  imports: [TypeOrmModule.forFeature([UsuarioEntity])],
   controllers: [UsuarioController],
-  providers: [UsuarioService, UsuarioRepositoryService],
+  providers: [UsuarioService, UsuarioRepository, JwtService],
   exports: [UsuarioService],
 })
 export class UsuarioModule {}

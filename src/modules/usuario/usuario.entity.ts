@@ -1,33 +1,19 @@
-import { IsEmail, IsNotEmpty, IsString, MinLength } from "class-validator";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
+@Entity()
 export class UsuarioEntity {
-  @IsString()
+  @PrimaryGeneratedColumn("uuid")
   id: string;
 
-  @IsNotEmpty()
-  @IsString({
-    message: "O nome precisa ser uma string!",
-  })
+  @Column()
   nome: string;
 
-  @IsNotEmpty()
-  @IsString({
-    message: "Email inválido!",
-  })
-  @IsNotEmpty()
-  @IsEmail()
+  @Column({ unique: true })
   email: string;
 
-  @IsNotEmpty()
-  @IsString()
+  @Column({ unique: true })
   cpf: string;
 
-  @IsNotEmpty()
-  @MinLength(6, {
-    message: "A senha deve conter pelo menos 6 dígitos",
-  })
-  @IsString({
-    message: "A senha precisa ser uma string!",
-  })
+  @Column()
   senha: string;
 }
