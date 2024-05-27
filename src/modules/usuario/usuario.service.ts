@@ -14,7 +14,7 @@ import { CreateUsuarioDto } from "./dtos/create-usuario-dto";
 import { UpdateUsuarioDto } from "./dtos/update-usuario-dto";
 import { QueryFailedError } from "typeorm";
 import { UsuarioServiceException } from "./exceptions/create-usuario-exception";
-
+import * as bcrypt from "bcrypt";
 @Injectable()
 export class UsuarioService {
   constructor(
@@ -91,7 +91,7 @@ export class UsuarioService {
       }
       return usuario;
     } catch (error) {
-      this.exceptionHandler(error);
+      return this.exceptionHandler(error);
     }
   }
 
@@ -112,8 +112,8 @@ export class UsuarioService {
   ): Promise<Omit<UsuarioEntity, "senha">> {
     const usuario = await this.usuarioRepository.findByEmail(email);
 
-    // IMPLEMENTAR LÓGICA DE ENCRIPTOGRAFIA
-    if (!usuario || usuario.senha !== senha) {
+    const isValidPassword = await bcrypt.compare(senha, usuario.senha);
+    if (!usuario || !isValidPassword) {
       return null;
     }
 

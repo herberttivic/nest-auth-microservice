@@ -8,7 +8,7 @@ import { UsuarioEntity } from "src/modules/usuario/usuario.entity";
 import { IUsuarioRepository } from "./usuario-repository.interface";
 import { InjectRepository } from "@nestjs/typeorm";
 import { QueryFailedError, Repository } from "typeorm";
-
+import * as bcrypt from "bcrypt";
 @Injectable()
 export class UsuarioRepository implements IUsuarioRepository {
   constructor(
@@ -45,7 +45,11 @@ export class UsuarioRepository implements IUsuarioRepository {
     return await this.typeOrmUsuarioRepository.find();
   }
   async create(data: Omit<UsuarioEntity, "id">): Promise<UsuarioEntity> {
-    return await this.typeOrmUsuarioRepository.save(data);
+    const usuario = {
+      ...data,
+      senha: await bcrypt.hash(data.senha, 10),
+    };
+    return await this.typeOrmUsuarioRepository.save(usuario);
   }
   async update(
     id: string,

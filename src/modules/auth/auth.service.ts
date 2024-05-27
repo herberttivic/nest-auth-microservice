@@ -2,12 +2,14 @@ import { Injectable } from "@nestjs/common";
 import { UsuarioService } from "../usuario/usuario.service";
 import { AuthPayloadDto } from "./dtos/auth.payload.dto";
 import { UsuarioEntity } from "../usuario/usuario.entity";
+import { Request } from "express";
 
 @Injectable()
 export class AuthService {
   constructor(private usuarioService: UsuarioService) {}
 
-  async login(request): Promise<any> {
+  async login(request: Request): Promise<any> {
+    console.log(request.body);
     // const payload = this.createPayload(usuario);
     // return {
     //   access_token: await this.jwtService.signAsync(payload),
