@@ -1,6 +1,7 @@
 import { UsuarioEntity } from "src/modules/usuario/usuario.entity";
 
-export interface AuthPayloadDto
-  extends Omit<Omit<UsuarioEntity, "id">, "senha"> {
+export interface AuthPayloadDto extends Omit<UsuarioEntity, "id"> {
   sub: string;
+  iat: number;
+  exp: number;
 }

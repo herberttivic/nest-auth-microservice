@@ -20,7 +20,9 @@ export class AuthService {
     };
   }
 
-  private createPayload(usuario: Omit<UsuarioEntity, "senha">): AuthPayloadDto {
+  private createPayload(
+    usuario: UsuarioEntity,
+  ): Omit<Omit<AuthPayloadDto, "iat">, "exp"> {
     const rawPayload = {
       sub: usuario.id,
       ...usuario,

@@ -1,11 +1,14 @@
 import { createParamDecorator, ExecutionContext } from "@nestjs/common";
-import { AuthRequest } from "src/modules/auth/dtos/auth.request.dto";
+import { AuthenticatedRequest } from "src/modules/auth/dtos/auth.request.dto";
 import { UsuarioFromJWTDto } from "src/modules/auth/dtos/usuario-from-jwt.dto";
 
 export const UsuarioAtual = createParamDecorator(
   (data: unknown, context: ExecutionContext): UsuarioFromJWTDto => {
-    const request = context.switchToHttp().getRequest<AuthRequest>();
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
 
-    return request.user;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const { senha, ...dados } = request.user;
+
+    return { ...dados } as UsuarioFromJWTDto;
   },
 );

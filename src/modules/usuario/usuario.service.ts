@@ -88,10 +88,7 @@ export class UsuarioService {
       return null;
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { senha: senhaOmitida, ...dados } = usuario;
-
-    return dados;
+    return usuario;
   }
 
   exceptionHandler(error: QueryFailedError | any, msg?: string) {
