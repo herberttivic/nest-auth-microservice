@@ -2,6 +2,8 @@ import { UsuarioModule } from "./modules/usuario/usuario.module";
 import { AuthModule } from "./modules/auth/auth.module";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { APP_GUARD } from "@nestjs/core";
+import { JwtAuthGuard } from "./modules/auth/guards/jwt-auth.guard";
 
 @Module({
   imports: [
@@ -17,6 +19,12 @@ import { TypeOrmModule } from "@nestjs/typeorm";
       entities: ["dist/**/*.entity{.ts,.js}"],
       synchronize: true,
     }),
+  ],
+  providers: [
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
   ],
 })
 export class AppModule {}

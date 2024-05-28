@@ -6,16 +6,14 @@ import {
   Param,
   Patch,
   Post,
-  Request,
 } from "@nestjs/common";
 import { UsuarioService } from "./usuario.service";
-import { AuthRequest } from "../auth/dtos/auth.request.dto";
 import { CreateUsuarioDto } from "./dtos/create-usuario-dto";
 import { UpdateUsuarioDto } from "./dtos/update-usuario-dto";
-
 @Controller("usuario")
 export class UsuarioController {
   constructor(private usuarioService: UsuarioService) {}
+
   @Get()
   findAll() {
     return this.usuarioService.findAll();
@@ -24,11 +22,6 @@ export class UsuarioController {
   @Get("/:id")
   findOne(@Param("id") usuarioId: string) {
     return this.usuarioService.findById(usuarioId);
-  }
-
-  @Get("/perfil")
-  profile(@Request() request: AuthRequest) {
-    return this.usuarioService.profile(request);
   }
 
   @Post()

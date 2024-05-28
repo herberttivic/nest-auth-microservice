@@ -2,14 +2,10 @@ import {
   HttpException,
   Injectable,
   InternalServerErrorException,
-  UnauthorizedException,
 } from "@nestjs/common";
 import { UsuarioEntity } from "./usuario.entity";
 import { UsuarioRepository } from "./repository/usuario-typeorm-repository";
-import { AuthRequest } from "../auth/dtos/auth.request.dto";
-import { extractTokenFromHeader } from "src/utils/jwt/extract-token-from-header";
 import { JwtService } from "@nestjs/jwt";
-import { AuthPayloadDto } from "../auth/dtos/auth.payload.dto";
 import { CreateUsuarioDto } from "./dtos/create-usuario-dto";
 import { UpdateUsuarioDto } from "./dtos/update-usuario-dto";
 import { QueryFailedError } from "typeorm";
@@ -50,7 +46,6 @@ export class UsuarioService {
     try {
       return await this.usuarioRepository.create(data);
     } catch (error: QueryFailedError | any) {
-      console.log(error?.message);
       this.exceptionHandler(error);
     }
   }
@@ -71,35 +66,11 @@ export class UsuarioService {
     }
   }
 
-  async profile(request: AuthRequest) {
+  async getPayloadByToken(token: string): Promise<any | null> {
     try {
-      const token = extractTokenFromHeader(request);
-      const payload = await this.getPayloadByToken(token);
-
-      if (!payload) {
-        throw new UnauthorizedException(
-          "Não foi possível resgatar os dados de usuário a partir do código de acesso!",
-        );
-      }
-
-      const usuario = this.validateByEmailPassword(
-        payload.email,
-        payload.senha,
-      );
-      if (!usuario) {
-        throw new UnauthorizedException("Dados de login inválidos!");
-      }
-      return usuario;
-    } catch (error) {
-      return this.exceptionHandler(error);
-    }
-  }
-
-  async getPayloadByToken(token: string): Promise<AuthPayloadDto | null> {
-    try {
-      const payload = (await this.jwtService.verifyAsync(token, {
+      const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.TOKEN_SECRET_KEY,
-      })) as AuthPayloadDto;
+      });
       return payload;
     } catch (error: QueryFailedError | any) {
       return null;
